@@ -53,9 +53,14 @@ sleep 2
 sudo mount /dev/mapper/loop0p2 /mnt/rpi
 
 echo "Configuring..."
+
 cp /mnt/rpi/etc/fstab tmp
 sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' -i tmp/fstab
 sudo cp tmp/fstab /mnt/rpi/etc/fstab
+
+cp /mnt/rpi/etc/ld.so.preload tmp
+sed -e '/^\/usr.*/s/^/# /g' -i tmp/ld.so.preload
+sudo cp tmp/ld.so.preload /mnt/rpi/etc/ld.so.preload
 
 echo "Unmounting..."
 sudo umount /mnt/rpi

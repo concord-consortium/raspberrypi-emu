@@ -13,27 +13,27 @@
 #
 # Working Wheezy kernel+image pair
 #
-# KERNEL=kernel-qemu-3.10.25-wheezy
-# IMAGE_URL=http://downloads.raspberrypi.org/raspbian/images/raspbian-2015-02-17/2015-02-16-raspbian-wheezy.zip
+KERNEL=kernel-qemu-3.10.25-wheezy
+IMAGE_URL=http://downloads.raspberrypi.org/raspbian/images/raspbian-2015-02-17/2015-02-16-raspbian-wheezy.zip
 
 
 #
 # Working Jessie kernel+image pair
 #
-KERNEL=kernel-qemu-4.4.12-jessie
-IMAGE_URL=http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-31/2016-05-27-raspbian-jessie.zip
+# KERNEL=kernel-qemu-4.4.12-jessie
+# IMAGE_URL=http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-31/2016-05-27-raspbian-jessie.zip
 
 
 #
-# Set IMAGE_ vars based on IMAGE_URL
+# Set IMAGE_ vars based on above IMAGE_URL
 #
 IMAGE_ZIP=`echo $IMAGE_URL | sed 's/.*\///'`
 IMAGE=`echo $IMAGE_ZIP | sed 's/\.zip$/.img/'`
 
 #
-# 
+# Set dirs
 #
 KERNEL_DIR=kernels/qemu-rpi-kernel
-IMAGE_DIR=images/
+IMAGE_DIR=images
 
 
