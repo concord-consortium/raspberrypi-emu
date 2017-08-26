@@ -15,11 +15,6 @@ if [ "$1" == "clean" ]; then
     exit 0
 fi
 
-if [ `id -u 2>/dev/null` != 0 ]; then
-    echo "Use sudo to run this script as root in order to mount the image files."
-    exit 1
-fi
-
 for DIR in $GENERATED_DIRS; do
     mkdir -p $DIR
 done
