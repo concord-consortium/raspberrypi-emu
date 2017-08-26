@@ -3,6 +3,8 @@
 #
 #
 
+. env.sh
+
 GENERATED_DIRS="kernels images"
 
 if [ "$1" == "clean" ]; then
@@ -24,5 +26,12 @@ cd kernels
 if [ ! -d "qemu-rpi-kernel" ]; then
     git clone https://github.com/dhruvvyas90/qemu-rpi-kernel.git
 fi
+cd ..
+
+#
+# Download image(s)
+#
+cd images
+    wget -N $IMAGE_URL
 cd ..
 
