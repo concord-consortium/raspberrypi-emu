@@ -6,6 +6,11 @@
 
 . env.sh
 
+#
+# Do not let ctrl-c kill the qemu process
+#
+stty intr ^]
+
 qemu-system-arm -kernel $KERNEL_DIR/$KERNEL \
                 -cpu arm1176 \
                 -m 256 \
