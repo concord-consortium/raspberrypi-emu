@@ -4,3 +4,8 @@
 /kernels
 /images
 
+#
+# tmp dir
+#
+/tmp
+

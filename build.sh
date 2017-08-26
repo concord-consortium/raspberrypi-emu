@@ -5,7 +5,7 @@
 
 . env.sh
 
-GENERATED_DIRS="kernels images"
+GENERATED_DIRS="kernels images tmp"
 
 if [ "$1" == "clean" ]; then
     echo "Cleaning workspace..."
@@ -42,14 +42,22 @@ fi
 cd ..
 
 #
-# Mount image and modify for qemu
+# Mount image, modify image for qemu, unmount
 #
 echo "Configuring image $IMAGE..."
+
+echo "Mounting..."
 sudo mkdir -p /mnt/rpi
 sudo kpartx -av images/$IMAGE
-sleep 5
+sleep 2
 sudo mount /dev/mapper/loop0p2 /mnt/rpi
 
+echo "Configuring..."
+cp /mnt/rpi/etc/fstab tmp
+sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' -i tmp/fstab
+sudo cp tmp/fstab /mnt/rpi/etc/fstab
+
+echo "Unmounting..."
 sudo umount /mnt/rpi
 sudo kpartx -d images/$IMAGE
 sudo rmdir /mnt/rpi

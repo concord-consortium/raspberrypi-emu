@@ -9,6 +9,7 @@
 # Ensure you specify a work kernel and image pair.
 # 
 
+
 #
 # Working Wheezy kernel+image pair
 #
@@ -28,5 +29,11 @@ IMAGE_URL=http://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-31/2
 #
 IMAGE_ZIP=`echo $IMAGE_URL | sed 's/.*\///'`
 IMAGE=`echo $IMAGE_ZIP | sed 's/\.zip$/.img/'`
+
+#
+# 
+#
+KERNEL_DIR=kernels/qemu-rpi-kernel
+IMAGE_DIR=images/
 
 
