@@ -5,7 +5,7 @@
 
 . env.sh
 
-GENERATED_DIRS="kernels images tmp"
+GENERATED_DIRS="kernels images runtime tmp"
 
 if [ "$1" == "clean" ]; then
     echo "Cleaning workspace..."
@@ -13,6 +13,11 @@ if [ "$1" == "clean" ]; then
         rm -rf $DIR
     done
     exit 0
+fi
+
+if [ `id -u 2>/dev/null` != 0 ]; then
+    echo "Use sudo to run this script as root in order to mount the image files."
+    exit 1
 fi
 
 for DIR in $GENERATED_DIRS; do
@@ -38,17 +43,18 @@ wget -N $IMAGE_URL
 if [ ! -f "$IMAGE" ]; then
     echo "Unzipping image $IMAGE..."
     unzip -o $IMAGE_ZIP
+    cp $IMAGE $QEMU_IMAGE
 fi
 cd ..
 
 #
 # Mount image, modify image for qemu, unmount
 #
-echo "Configuring image $IMAGE..."
+echo "Configuring image $QEMU_IMAGE..."
 
 echo "Mounting..."
 sudo mkdir -p /mnt/rpi
-sudo kpartx -av images/$IMAGE
+sudo kpartx -av images/$QEMU_IMAGE
 sleep 2
 sudo mount /dev/mapper/loop0p2 /mnt/rpi
 
@@ -64,7 +70,11 @@ sudo cp tmp/ld.so.preload /mnt/rpi/etc/ld.so.preload
 
 echo "Unmounting..."
 sudo umount /mnt/rpi
-sudo kpartx -d images/$IMAGE
+sudo kpartx -d images/$QEMU_IMAGE
 sudo rmdir /mnt/rpi
 
+#
+# Copy built image to runtime location
+#
+cp images/$QEMU_IMAGE runtime/$QEMU_IMAGE
 

@@ -35,5 +35,6 @@ IMAGE=`echo $IMAGE_ZIP | sed 's/\.zip$/.img/'`
 #
 KERNEL_DIR=kernels/qemu-rpi-kernel
 IMAGE_DIR=images
+QEMU_IMAGE=`echo $IMAGE | sed 's/\.img$/.qemu.img/'`
 
 

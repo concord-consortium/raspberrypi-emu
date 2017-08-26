@@ -13,6 +13,6 @@ qemu-system-arm -kernel $KERNEL_DIR/$KERNEL \
                 -no-reboot -serial stdio \
                 -append "root=/dev/sda2 panic=1 rootfstype=ext4 rw" \
                 -redir tcp:5022::22 \
-                -hda $IMAGE_DIR/$IMAGE
+                -hda runtime/$QEMU_IMAGE
 
 
