@@ -10,6 +10,7 @@ sudo apt-get install -y python-pip
 sudo pip install gevent
 sudo pip install ws4py
 sudo pip install hjson
+sudo pip install python-dateutil
 
 #
 # Install rhizo:
