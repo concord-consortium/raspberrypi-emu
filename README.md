@@ -26,3 +26,15 @@ Run start-pi.sh to start the emulator.
 
 `./start-pi.sh`
 
+
+# Install inspect client
+
+Log in to your Raspberry Pi emu (login: pi/raspberry) and run the following:
+
+`wget https://concord-consortium.github.io/raspberrypi-emu/inspect/install-client.sh`
+
+`chmod 755 install-client.sh`
+
+`./install-client.sh`
+
+
