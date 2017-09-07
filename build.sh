@@ -36,7 +36,7 @@ cd ..
 echo "Downloading image $IMAGE..."
 cd images
 wget -N $IMAGE_URL
-if [ ! -f "$IMAGE" ]; then
+if [ ! -f "$QEMU_IMAGE" ]; then
     echo "Unzipping image $IMAGE..."
     unzip -o $IMAGE_ZIP
     cp $IMAGE $QEMU_IMAGE
