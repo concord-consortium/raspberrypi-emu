@@ -6,6 +6,7 @@
 . env.sh
 
 GENERATED_DIRS="kernels images runtime tmp"
+OS=`uname`
 
 if [ "$1" == "clean" ]; then
     echo "Cleaning workspace..."
@@ -47,26 +48,68 @@ cd ..
 #
 echo "Configuring image $QEMU_IMAGE..."
 
-echo "Mounting..."
-sudo mkdir -p /mnt/rpi
-sudo kpartx -av images/$QEMU_IMAGE
-sleep 2
-sudo mount /dev/mapper/loop0p2 /mnt/rpi
+if [ "$OS" == "Darwin" ]; then
 
-echo "Configuring..."
+    #
+    #
+    # Need to install osxfuse with MacFuse Compatibility Layer
+    # See https://github.com/osxfuse/osxfuse/wiki/FAQ
+    #
+    # Need to install fuse-ext2
+    # See https://github.com/alperakcan/fuse-ext2
+    # Follow script in README.md - this is a pain.
+    # The build also complains even though it succeeds. Hmm..
+    # 
 
-cp /mnt/rpi/etc/fstab tmp
-sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' -i tmp/fstab
-sudo cp tmp/fstab /mnt/rpi/etc/fstab
+    which fuse-ext2
 
-cp /mnt/rpi/etc/ld.so.preload tmp
-sed -e '/^\/usr.*/s/^/# /g' -i tmp/ld.so.preload
-sudo cp tmp/ld.so.preload /mnt/rpi/etc/ld.so.preload
+    if [ "$?" != "0" ]; then
+        echo "ERROR fuse-ext2 not installed."
+        echo "Install fuse-ext2 to mount the ext4 image in rw+ mode."
+        exit 1
+    fi
+    
+    echo "Mounting..."
+    hdiutil mount images/$QEMU_IMAGE
+    mkdir -p mnt 
+    fuse-ext2 /dev/disk2s2 mnt -o rw+
 
-echo "Unmounting..."
-sudo umount /mnt/rpi
-sudo kpartx -d images/$QEMU_IMAGE
-sudo rmdir /mnt/rpi
+    echo "Configuring..."
+
+    cat mnt/etc/fstab | sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' > tmp/fstab
+    sudo cp tmp/fstab mnt/etc/fstab
+    
+    cat mnt/etc/ld.so.preload | sed -e '/^\/usr.*/s/^/# /g' > tmp/ld.so.preload
+    sudo cp tmp/ld.so.preload mnt/etc/ld.so.preload
+ 
+    echo "Unmounting..."
+    umount mnt
+    hdiutil eject /dev/disk2
+
+else
+
+    echo "Mounting..."
+    sudo mkdir -p /mnt/rpi
+    sudo kpartx -av images/$QEMU_IMAGE
+    sleep 2
+    sudo mount /dev/mapper/loop0p2 /mnt/rpi
+    
+    echo "Configuring..."
+    
+    cp /mnt/rpi/etc/fstab tmp
+    sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' -i tmp/fstab
+    sudo cp tmp/fstab /mnt/rpi/etc/fstab
+    
+    cp /mnt/rpi/etc/ld.so.preload tmp
+    sed -e '/^\/usr.*/s/^/# /g' -i tmp/ld.so.preload
+    sudo cp tmp/ld.so.preload /mnt/rpi/etc/ld.so.preload
+    
+    echo "Unmounting..."
+    sudo umount /mnt/rpi
+    sudo kpartx -d images/$QEMU_IMAGE
+    sudo rmdir /mnt/rpi
+fi
+
 
 #
 # Copy built image to runtime location
