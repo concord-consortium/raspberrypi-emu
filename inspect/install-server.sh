@@ -29,4 +29,5 @@ touch __init__.py
 git clone https://github.com/manylabs/flow-server
 cd ../../
 
+docker-compose build
 
