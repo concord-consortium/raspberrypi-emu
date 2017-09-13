@@ -30,6 +30,13 @@ if [ ! -d "qemu-rpi-kernel" ]; then
 fi
 cd ..
 
+if [ "$1" == "--kernels-only" ]; then
+    echo
+    echo "Kernels downloaded."
+    echo
+    exit 0
+fi
+
 #
 # Download and unzip image
 #
