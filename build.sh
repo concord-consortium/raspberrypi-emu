@@ -48,6 +48,9 @@ cd ..
 #
 echo "Configuring image $QEMU_IMAGE..."
 
+mkdir -p tmp
+rm -rf tmp/*
+
 if [ "$OS" == "Darwin" ]; then
 
     #
@@ -85,29 +88,32 @@ if [ "$OS" == "Darwin" ]; then
     echo "Unmounting..."
     umount mnt
     hdiutil eject /dev/disk2
+    rmdir mnt
 
 else
 
     echo "Mounting..."
-    sudo mkdir -p /mnt/rpi
-    sudo kpartx -av images/$QEMU_IMAGE
+    sudo mkdir -p mnt
+    DEV=`sudo kpartx -av images/$QEMU_IMAGE | grep "add map loop[0-9]p2" | cut -d ' ' -f 3`
+
     sleep 2
-    sudo mount /dev/mapper/loop0p2 /mnt/rpi
+    sudo mount /dev/mapper/$DEV mnt
     
     echo "Configuring..."
     
-    cp /mnt/rpi/etc/fstab tmp
+    cp mnt/etc/fstab tmp
     sed -e '/^\/dev\/mmcblk0p.*/s/^/# /g' -i tmp/fstab
-    sudo cp tmp/fstab /mnt/rpi/etc/fstab
+    sudo cp tmp/fstab mnt/etc/fstab
     
-    cp /mnt/rpi/etc/ld.so.preload tmp
+    cp mnt/etc/ld.so.preload tmp
     sed -e '/^\/usr.*/s/^/# /g' -i tmp/ld.so.preload
-    sudo cp tmp/ld.so.preload /mnt/rpi/etc/ld.so.preload
+    sudo cp tmp/ld.so.preload mnt/etc/ld.so.preload
     
     echo "Unmounting..."
-    sudo umount /mnt/rpi
+    sudo umount mnt
     sudo kpartx -d images/$QEMU_IMAGE
-    sudo rmdir /mnt/rpi
+    sudo rmdir mnt
+
 fi
 
 
