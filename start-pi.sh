@@ -20,4 +20,6 @@ qemu-system-arm -kernel $KERNEL_DIR/$KERNEL \
                 -redir tcp:5022::22 \
                 -hda runtime/$QEMU_IMAGE
 
+stty sane
+
 

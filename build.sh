@@ -73,9 +73,9 @@ if [ "$OS" == "Darwin" ]; then
     fi
     
     echo "Mounting..."
-    hdiutil mount images/$QEMU_IMAGE
+    DEV=`hdiutil mount images/$QEMU_IMAGE | grep Linux | awk '{print $1}'`
     mkdir -p mnt 
-    fuse-ext2 /dev/disk2s2 mnt -o rw+
+    fuse-ext2 $DEV mnt -o rw+
 
     echo "Configuring..."
 
@@ -87,7 +87,7 @@ if [ "$OS" == "Darwin" ]; then
  
     echo "Unmounting..."
     umount mnt
-    hdiutil eject /dev/disk2
+    hdiutil eject $DEV
     rmdir mnt
 
 else
