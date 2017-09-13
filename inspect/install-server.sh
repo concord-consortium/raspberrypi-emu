@@ -14,6 +14,11 @@ mkdir -p $SERVER_DIR
 
 cp templates/* $SERVER_DIR
 
+if [ "$1" == "templates" ]; then
+    echo "Copied templates."
+    exit 0
+fi
+
 cd $SERVER_DIR
 git clone https://github.com/rhizolab/rhizo-server
 

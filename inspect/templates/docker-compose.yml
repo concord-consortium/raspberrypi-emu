@@ -1,0 +1,28 @@
+#
+# 
+#
+version: '2'
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        # command: bash
+        # stdin_open: true
+        # tty: true
+
+        volumes:
+            - rhizo.settings:/dataflow/rhizo-server/settings
+            - rhizo.db:/var/lib/sqlite
+    
+        networks:
+            default:
+
+        ports:
+            - "5000:5000"
+
+volumes:
+    rhizo.settings:
+    rhizo.db:
+
