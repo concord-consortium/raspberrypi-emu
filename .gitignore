@@ -15,3 +15,9 @@
 #
 /mnt
 
+#
+# Inspect server clones
+#
+/inspect/inspect-server
+
+
